@@ -26,7 +26,7 @@ const GptSearchBar = () => {
   const handleGptSearchClick = async () => {
     console.log(searchText.current.value);
     // Make an API call to GPT API and get Movie Results
-
+    try {
     const gptQuery =
       "Act as a Movie Recommendation system and suggest some movies for the query : " +
       searchText.current.value +
@@ -39,6 +39,8 @@ const GptSearchBar = () => {
 
     if (!gptResults.choices) {
       // TODO: Write Error Handling
+      console.error("No results found from GPT");
+      return;
     }
 
     console.log(gptResults.choices?.[0]?.message?.content);
@@ -60,6 +62,14 @@ const GptSearchBar = () => {
     dispatch(
       addGptMovieResult({ movieNames: gptMovies, movieResults: tmdbResults })
     );
+  } catch (error) {
+    if (error.status === 429) {
+      <div>Quota exceeded. Check your OpenAI plan and usage.</div>
+      console.error("Quota exceeded. Check your OpenAI plan and usage.");
+    } else {
+      console.error("An error occurred:", error);
+    }
+  }
   };
 
   return (
@@ -81,7 +91,9 @@ const GptSearchBar = () => {
           {lang[langKey].search}
         </button>
       </form>
+      
     </div>
+
   );
 };
 export default GptSearchBar;

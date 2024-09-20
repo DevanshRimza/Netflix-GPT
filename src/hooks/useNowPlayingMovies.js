@@ -16,7 +16,9 @@ const useNowPlayingMovies = () => {
       "https://api.themoviedb.org/3/movie/now_playing?page=1",
       API_OPTIONS
     );
+   // 'https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', options
     const json = await data.json();
+    console.log(json);
     dispatch(addNowPlayingMovies(json.results));
   };
 
